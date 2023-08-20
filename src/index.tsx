@@ -1,19 +1,37 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
+import './app.scss';
 import App from './App';
-import reportWebVitals from './reportWebVitals';
+import { SnackbarOrigin, SnackbarProvider } from 'notistack';
+import { Provider } from 'react-redux';
+import { HashRouter } from 'react-router-dom';
+import store from './store';
 
-const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
-);
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+const snackBarProviderAnchor : SnackbarOrigin = {
+    vertical: 'bottom',
+    horizontal: 'right',
+};
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+const AppRoot = () : JSX.Element => {
+
+    const title = 'NM Dashboard';
+    document.title = title;
+
+    return (
+        <Provider store={store}>
+            <HashRouter>
+                <SnackbarProvider
+                    maxSnack={4}
+                    anchorOrigin={snackBarProviderAnchor}>
+                    <App />
+                </SnackbarProvider>
+            </HashRouter>
+        </Provider>
+    );
+};
+
+const rootDomElement = document.getElementById('root');
+
+if (rootDomElement) {
+    ReactDOM.createRoot(rootDomElement).render(<AppRoot/>);
+}
